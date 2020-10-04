@@ -1,0 +1,51 @@
+.model small
+.data
+address dw 0B0h
+bitmask db 0Ch
+color db 0101b
+adapter dw 12h
+
+.code
+start:
+
+; Init Adapter
+
+mov ax, @data		; настройка сегмента данных
+mov ds, ax		; через регистр ах
+mov ax, adapter		; VGA 640x480x256
+int 10h                 ; Прерывание BIOS 
+
+; Init offset
+
+mov ax, 0A000h	; адрес видеопамяти
+mov es, ax      ; устанавливаем сегментный регистр
+mov bx, address	; смещение 
+
+;установка регистра маски карты для цвета
+mov dx, 3C4h  		;указываем на адресный регистр
+mov al, 2  			;индекс регистра маски карты
+out dx, al 			;установка адреса
+inc dx				;указываем на регистр данных
+mov al, color		;код цвета
+out dx, al			;посылаем код цвета
+
+;маскируем биты
+mov dx, 3CEh		;указываем на адресный регистр
+mov al, 8			;номер регистра
+out dx, al			;посылаем его
+inc dx				;указываем на регистр данных
+mov al, bitmask		;маска
+out dx, al			;посылаем данные
+
+;---рисуем точку
+mov al, 0FFh		;любое значение с установленным 7 битом
+mov es:[bx], al		;выводим точку
+
+; Завершение
+
+xor ax, ax		;ожидание нажатия клавиши
+int 16h
+
+mov ax, 4C00h	        ;выход из графики с возвратом
+int 21h			;в предыдущий режим
+end start
