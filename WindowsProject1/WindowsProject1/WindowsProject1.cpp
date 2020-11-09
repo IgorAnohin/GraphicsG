@@ -150,49 +150,80 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             HDC hdc = BeginPaint(hWnd, &ps);
             // TODO: Add any drawing code that uses hdc here...
 
-            double factor = (2.0f * 3.1416f) / 360.0f;
-            double rot = 45.0f * factor;
-            double rot2 = 45.0f * factor;
+
+  HGDIOBJ oldBrush = SelectObject(hdc, GetStockObject(BLACK_BRUSH));
+            POINT topVerticles[] = {
+                {299, 224},
+                {304, 221},
+                {308, 217},
+                {310, 213},
+                {306, 209},
+                {298, 209},
+                {292, 212},
+                {291, 220},
+                {291, 226},
+                {293, 234},
+                {299, 238}, 
+                {302, 238},
+                {307, 238},
+
+                {317, 237},
+                {323, 232},
+                {332, 222},
+                {338, 209},
+                {343, 202},
+                {347, 193},
+                {351, 204},
+                {354, 214},
+                {360, 233},
+                {366, 239},
+                {375, 234},
+                {385, 217},
+                {392, 201},
+                {395, 192},
+                {398, 205},
+                {403, 217},
+                {408, 225},
+                {415, 233},
+                {421, 238},
+                {432, 238},
+                {440, 234},
+                {448, 225},
+                {450, 217},
+                {447, 210},
+                {441, 206},
+                {434, 206},
+                {431, 213},
+
+                {438, 217},
+                {433, 225},
+                {424, 225},
+                {419, 221},
+                {412, 212},
+                {406, 198},
+                {402, 177},
+                {402, 165},
+                {394, 165},
+                {390, 179},
+                {383, 204},
+                {376, 221},
+                {368, 226},
+                {363, 218},
+                {355, 185},
+                {354, 164},
+                {347, 164},
+                {342, 183},
+                {335, 198},
+                {325, 219},
+                {317, 227},
+                {309, 230},
+                {303, 230},
 
 
-            // Create a matrix for the transform we want (read the docs for details)
-            XFORM xfm = { 0.0f };
-            XFORM xfm2 = { 0.0f };
 
-            XFORM oldXfm = { 0.0f };
+            };
 
-            xfm.eM11 = (float)cos(rot);
-            xfm.eM12 = (float)sin(rot);
-            xfm.eM21 = (float)-sin(rot);
-            xfm.eM22 = (float)cos(rot);
-
-
-            xfm2.eM11 = (float)cos(rot2);
-            xfm2.eM12 = (float)sin(rot2);
-            xfm2.eM21 = (float)-sin(rot2);
-            xfm2.eM22 = (float)cos(rot2);
-            float x0 = 265;
-            float y0 = 348;
-            xfm2.eDx = x0 - cos(rot2) * x0 + sin(rot2) * y0;
-            xfm2.eDy = y0 - cos(rot2) * y0 - sin(rot2) * x0;
-            
-            auto oldBrush = SelectObject(hdc, GetStockObject(BLACK_BRUSH));
-
-            auto oldMode = SetGraphicsMode(hdc, GM_ADVANCED);
-            GetWorldTransform(hdc, &oldXfm);
-            SetWorldTransform(hdc, &xfm);    // Tell Windows to use that transform matrix
-
-            Rectangle(hdc, 290, 190, 450, 230);
-            SetWorldTransform(hdc, &xfm2);    // Tell Windows to use that transform matrix
-            //Rectangle(hdc, 120, 620, 280, 660);
-            Rectangle(hdc, 250, 345, 290, 520);
-
-            SetWorldTransform(hdc, &oldXfm);    // Tell Windows to use that transform matrix
-
-            SetGraphicsMode(hdc, oldMode);
-
-            Rectangle(hdc, 40, 325, 80, 500);
-            Rectangle(hdc, 245, 325, 285, 500);
+            Polygon(hdc, topVerticles, sizeof(topVerticles) / sizeof(topVerticles[0]));
 
 
             SelectObject(hdc, oldBrush);
